@@ -2,66 +2,74 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Smart Study Hub - AI Assistant</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Assistant</title>
   <style>
-    .ai-container {
-      max-width: 600px;
-      margin: 2rem auto;
-      padding: 1.5rem;
-      background: #f5f5f5;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f7ff;
+      padding: 20px;
     }
-    input, button {
+    h1 {
+      color: #3b3b98;
+    }
+    form {
+      margin-top: 20px;
+    }
+    input[type="text"] {
       padding: 10px;
-      margin-top: 10px;
-      width: 100%;
-      font-size: 1rem;
+      width: 70%;
+      border-radius: 5px;
+      border: 1px solid #ccc;
     }
-    #response {
-      margin-top: 1rem;
-      padding: 1rem;
+    button {
+      padding: 10px 20px;
+      background-color: #3b3b98;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #result {
+      margin-top: 20px;
       background: white;
+      padding: 15px;
       border-radius: 8px;
-      min-height: 40px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1 style="text-align:center;">🤖 Smart AI Assistant</h1>
-  </header>
-
-  <div class="ai-container">
-    <p>Ask me anything academic — math, science, facts, and more!</p>
-    <input type="text" id="question" placeholder="e.g. What is the derivative of x^2?" />
-    <button onclick="askAI()">Submit</button>
-    <div id="response">Your answer will appear here...</div>
-  </div>
+  <h1>🤖 Ask the AI</h1>
+  <form id="queryForm">
+    <input type="text" id="question" placeholder="Ask a math or science question..." required />
+    <button type="submit">Ask</button>
+  </form>
+  <div id="result"></div>
 
   <script>
-    async function askAI() {
-      const input = document.getElementById("question").value;
-      const encoded = encodeURIComponent(input);
-      const appId = "Y3EAEA-G7X683XKQ3";
-      const url = `https://api.wolframalpha.com/v1/result?i=${encoded}&appid=${appId}`;
+    const form = document.getElementById('queryForm');
+    const resultDiv = document.getElementById('result');
 
-      const responseBox = document.getElementById("response");
-      responseBox.textContent = "Thinking...";
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const question = document.getElementById('question').value;
+
+      resultDiv.innerHTML = 'Thinking...';
+
+      const appId = 'Y3EAEA-G7X683XKQ3'; // Your Wolfram Alpha App ID
+
+      const apiUrl = `https://api.wolframalpha.com/v1/result?appid=${appId}&i=${encodeURIComponent(question)}`;
 
       try {
-        const res = await fetch(url);
-        if (!res.ok) {
-          throw new Error("No answer found");
-        }
+        const res = await fetch(apiUrl);
+        if (!res.ok) throw new Error("No answer found.");
         const answer = await res.text();
-        responseBox.textContent = answer;
+        resultDiv.innerHTML = `<strong>Answer:</strong> ${answer}`;
       } catch (err) {
-        responseBox.textContent = "⚠️ I couldn't find an answer. Try rephrasing.";
+        resultDiv.innerHTML = "Sorry, I couldn't find an answer. Try rephrasing your question.";
       }
-    }
+    });
   </script>
 </body>
 </html>
