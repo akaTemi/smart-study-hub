@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>AI Study Assistant</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header>
@@ -15,7 +15,7 @@
     <div class="ai-container">
       <input type="text" id="question" placeholder="e.g. What's 2 + 2?" />
       <button onclick="askQuestion()">Ask</button>
-      <div id="answer"></div>
+      <div id="answer" style="margin-top: 1rem;"></div>
     </div>
   </main>
 
@@ -23,7 +23,35 @@
     <p>© 2025 Smart Study Hub. Powered by WolframAlpha.</p>
   </footer>
 
-  <script src="script.js"></script>
+  <script>
+    async function askQuestion() {
+      const input = document.getElementById("question").value;
+      const answerDiv = document.getElementById("answer");
+
+      if (!input.trim()) {
+        answerDiv.textContent = "Please enter a question.";
+        return;
+      }
+
+      answerDiv.textContent = "Thinking...";
+
+      const encodedInput = encodeURIComponent(input);
+      const url = `http://localhost:3000/api/query?input=${encodedInput}`;
+
+      try {
+        const response = await fetch(url);
+        if (response.ok) {
+          const answer = await response.text();
+          answerDiv.textContent = answer;
+        } else {
+          answerDiv.textContent = "Sorry, I couldn't figure that out.";
+        }
+      } catch (error) {
+        console.error(error);
+        answerDiv.textContent = "Something went wrong. Try again.";
+      }
+    }
+  </script>
 </body>
 </html>
 
