@@ -1,0 +1,47 @@
+<!-- ai.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Study Assistant</title>
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    async function askAI() {
+      const question = document.getElementById("question").value;
+      const appId = "Y3EAEA-G7X683XKQ3"; // Your Wolfram Alpha App ID
+
+      const url = `https://api.wolframalpha.com/v1/result?i=${encodeURIComponent(question)}&appid=${appId}`;
+
+      try {
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error("No result found.");
+        }
+        const answer = await response.text();
+        document.getElementById("answer").innerText = answer;
+      } catch (error) {
+        document.getElementById("answer").innerText = "Sorry, I couldn't figure that out. Try a different question.";
+      }
+    }
+  </script>
+</head>
+<body>
+  <header>
+    <h1>🤖 AI Study Assistant</h1>
+    <p>Ask me any math, science, or general question!</p>
+  </header>
+
+  <main>
+    <section>
+      <input type="text" id="question" placeholder="Type your question..." style="width: 100%; padding: 1rem; font-size: 1rem;" />
+      <button onclick="askAI()" style="margin-top: 1rem; padding: 0.75rem 1.5rem;">Ask</button>
+      <p id="answer" style="margin-top: 2rem; font-size: 1.2rem; font-weight: bold;"></p>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2025 Smart Study Hub. Powered by WolframAlpha.</p>
+  </footer>
+</body>
+</html>
