@@ -1,30 +1,27 @@
-const appId = "Y3EAEA-G7X683XKQ3"; // Your WolframAlpha App ID
-
 async function askQuestion() {
-  const question = document.getElementById("question").value;
-  const answerBox = document.getElementById("answer");
+  const input = document.getElementById("question").value;
+  const answerDiv = document.getElementById("answer");
 
-  if (!question.trim()) {
-    answerBox.innerHTML = "<p>Please enter a question.</p>";
+  if (!input.trim()) {
+    answerDiv.textContent = "Please enter a question.";
     return;
   }
 
-  answerBox.innerHTML = "<p>Thinking...</p>";
+  answerDiv.textContent = "Thinking...";
+
+  const encodedInput = encodeURIComponent(input);
+  const url = `http://localhost:3000/api/query?input=${encodedInput}`;
 
   try {
-    const res = await fetch(
-      `https://api.wolframalpha.com/v1/result?i=${encodeURIComponent(question)}&appid=${appId}`
-    );
-
-    if (!res.ok) {
-      answerBox.innerHTML = "<p>Sorry, I couldn't get an answer. Try a different question.</p>";
-      return;
+    const response = await fetch(url);
+    if (response.ok) {
+      const answer = await response.text();
+      answerDiv.textContent = answer;
+    } else {
+      answerDiv.textContent = "Sorry, I couldn't figure that out.";
     }
-
-    const answer = await res.text();
-    answerBox.innerHTML = `<p><strong>Answer:</strong> ${answer}</p>`;
   } catch (error) {
-    console.error("API Error:", error);
-    answerBox.innerHTML = "<p>Something went wrong. Try again later.</p>";
+    console.error(error);
+    answerDiv.textContent = "Something went wrong. Try again.";
   }
 }
