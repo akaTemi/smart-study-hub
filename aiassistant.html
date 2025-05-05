@@ -2,19 +2,19 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>AI Assistant</title>
+  <title>Study Tools</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header>
-    <h1>AI Assistant</h1>
-    <p>Ask me anything about Math, Science, or study tips!</p>
+    <h1>Study Tools</h1>
+    <p>Boost focus with a Pomodoro timer.</p>
   </header>
   <main>
-    <div class="chat-container">
-      <div id="chat-box"></div>
-      <input type="text" id="user-input" placeholder="Type your question..." />
-      <button onclick="sendMessage()">Send</button>
+    <div style="text-align: center;">
+      <h2 id="timer">25:00</h2>
+      <button onclick="startTimer()">Start</button>
+      <button onclick="resetTimer()">Reset</button>
     </div>
   </main>
   <footer>
@@ -22,29 +22,35 @@
   </footer>
 
   <script>
-    function sendMessage() {
-      const input = document.getElementById('user-input');
-      const chatBox = document.getElementById('chat-box');
-      const userMessage = input.value;
+    let time = 25 * 60;
+    let timerInterval;
 
-      if (!userMessage) return;
-
-      chatBox.innerHTML += `<p><strong>You:</strong> ${userMessage}</p>`;
-
-      // Simulated AI response
-      let response = "Hmm... Let me think...";
-      if (userMessage.toLowerCase().includes("photosynthesis")) {
-        response = "Photosynthesis is the process by which plants convert sunlight into energy.";
-      } else if (userMessage.toLowerCase().includes("derivative")) {
-        response = "A derivative represents the rate of change of a function with respect to a variable.";
-      } else {
-        response = "That's a great question! I'll get you an answer soon.";
-      }
-
-      chatBox.innerHTML += `<p><strong>AI:</strong> ${response}</p>`;
-      input.value = "";
-      chatBox.scrollTop = chatBox.scrollHeight;
+    function updateDisplay() {
+      const minutes = Math.floor(time / 60);
+      const seconds = time % 60;
+      document.getElementById('timer').textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
     }
+
+    function startTimer() {
+      if (timerInterval) return;
+      timerInterval = setInterval(() => {
+        time--;
+        updateDisplay();
+        if (time <= 0) {
+          clearInterval(timerInterval);
+          alert("Time's up! Take a short break.");
+        }
+      }, 1000);
+    }
+
+    function resetTimer() {
+      clearInterval(timerInterval);
+      timerInterval = null;
+      time = 25 * 60;
+      updateDisplay();
+    }
+
+    updateDisplay();
   </script>
 </body>
 </html>
