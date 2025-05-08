@@ -10,7 +10,9 @@ async function askQuestion() {
   answerDiv.textContent = "Thinking...";
 
   const encodedInput = encodeURIComponent(input);
-  const url = `http://localhost:3000/api/query?input=${encodedInput}`;
+
+  // ✅ Use the deployed backend, not localhost
+  const url = `https://smart-study-api.onrender.com/api/query?input=${encodedInput}`;
 
   try {
     const response = await fetch(url);
